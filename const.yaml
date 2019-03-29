@@ -1,0 +1,5 @@
+host=localhost
+dbname=focos_calor
+user=postgres
+password=postgres
+port=5432
