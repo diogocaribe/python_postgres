@@ -1,5 +1,7 @@
-import psycopg2 as pg
+import argparse
+from sys import argv
 
+import psycopg2 as pg
 import yaml
 
 
@@ -7,7 +9,6 @@ class Connection:
     """Conection class."""
     def __init__(self, connection_string):
         self.connection_string = connection_string
-        self.query = query
         self.conn = None
 
     def open_connect(self):
@@ -42,15 +43,21 @@ class Connection:
     def run_query(self, query):
         conn = self.open_connect()
         cursor = conn.cursor()
-        cursor.execute(self.query)
+        cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()
+        print(result)
         return result
 
+def main():
+    parser = argparse.ArgumentParser(description="Python Connection Class to \
+                                                  Postgresql Database")
+    parser.add_argument("-q", "--query", help="Query which will be run in database")
+    parser.parse_args()
 
-if __name__ == "__main__":
+
+if __name__ == "__main__" and len(argv) < 1:
     with open('const.yaml', 'r') as f:
         p = yaml.load(f, Loader=yaml.FullLoader)
-        query = 'SELECT * FROM foco_calor LIMIT 10'
-        q = Connection(p)
-        q.run_query(query)
+else:
+    main()
