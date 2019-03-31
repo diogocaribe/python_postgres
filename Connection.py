@@ -9,29 +9,58 @@ import yaml
 class Connection:
     """Conection class."""
     def __init__(self, connection_string):
-        """Connection string is given by yaml file."""
+        """Init of Connection.
+
+        Parameters
+        ----------
+        self: 
+        connection_string: Connection string is given by yaml file
+
+        Returns
+        -------
+        Connection strig of Postgres Database
+        """
         self.connection_string = connection_string
         self.conn = None
 
+
     def open_connect(self):
-        """ Connect to the PostgreSQL database server """
+        """Connect to the PostgreSQL database server.
+
+        Parameters
+        ----------
+        self: 
+
+        Returns
+        -------
+        Open conection from database server
+
+        """
         conn = self.conn
-        
         try:
             # read connection parameters
             params = self.connection_string
-
             # connect to the PostgreSQL server
-            print('Connecting to the PostgreSQL database...')
+            print("Connecting to the PostgreSQL database...")
             conn = pg.connect(params)
             conn.autocommit = True
 
             return conn
         except (Exception, pg.DatabaseError) as error:
             print(error)
-    
+
+
     def close_connect(self):
-        """ Close connect to the PostgreSQL database server """
+        """Close connect to the PostgreSQL database server.
+
+        Parameters
+        ----------
+        self: 
+
+        Returns
+        -------
+        Close connection from Postgres database
+        """
         conn = self.conn
         try:
             conn.close()
@@ -41,8 +70,20 @@ class Connection:
             if conn is not None:
                 conn.close()
                 print('Database connection closed.')
-    
+
+
     def run_query(self, query):
+        """Run query in Postgres database.
+
+        Parameters
+        ----------
+        self: 
+        query: Query that will run in Postgres database
+
+        Returns
+        -------
+        Result of query where is runned in Postgres database
+        """
         conn = self.open_connect()
         cursor = conn.cursor()
         cursor.execute(query)
