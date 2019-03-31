@@ -1,3 +1,4 @@
+"""Class to run query in Postgres Database."""
 import argparse
 from sys import argv
 
@@ -8,6 +9,7 @@ import yaml
 class Connection:
     """Conection class."""
     def __init__(self, connection_string):
+        """Connection string is given by yaml file."""
         self.connection_string = connection_string
         self.conn = None
 
@@ -46,18 +48,18 @@ class Connection:
         cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()
-        print(result)
         return result
 
-def main():
-    parser = argparse.ArgumentParser(description="Python Connection Class to \
-                                                  Postgresql Database")
-    parser.add_argument("-q", "--query", help="Query which will be run in database")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description = "Python Connection Class to Postgresql Database", 
+        usage = "Connection.py [query]")
+
+    parser.add_argument("-q", "--query", help="Postgresql to run in database")
     parser.parse_args()
 
-
-if __name__ == "__main__" and len(argv) < 1:
     with open('const.yaml', 'r') as f:
-        p = yaml.load(f, Loader=yaml.FullLoader)
-else:
-    main()
+        conn_string = yaml.load(f, Loader=yaml.FullLoader)
+        q = argv[2]
+        print(Connection(conn_string).run_query(q))
